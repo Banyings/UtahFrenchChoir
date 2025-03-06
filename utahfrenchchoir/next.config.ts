@@ -6,7 +6,6 @@ import type { NextConfig } from "next";
 
 // export default nextConfig;
 
-// pablishing Github Pages
 
 const nextConfig: NextConfig = {
   output: "export",
