@@ -24,7 +24,7 @@ const Home = () => {
         </div>
         <div className="relative w-full aspect-[4/2] rounded-lg overflow-hidden">
           <Image 
-            src="/choir-group.png" 
+            src="./choir-group.png" 
             alt="Choir group" 
             fill
             className="object-cover"
@@ -38,7 +38,7 @@ const Home = () => {
         <div className="bg-gray-50 p-6 rounded-lg border border-neutral-950">
           <div className="relative w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden">
             <Image 
-              src="/choir-group.png" 
+              src="./choir-group.png" 
               alt="I love Singing" 
               fill
               className="object-cover"
@@ -57,7 +57,7 @@ const Home = () => {
         <div className="bg-gray-50 p-6 rounded-lg border border-neutral-950">
           <div className="relative w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden">
             <Image 
-              src="/choir-group.png" 
+              src="./choir-group.png" 
               alt="Come visit us" 
               fill
               className="object-cover"
@@ -76,7 +76,7 @@ const Home = () => {
         <div className="bg-gray-50 p-6 rounded-lg border4 border border-neutral-950">
           <div className="relative w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden">
             <Image 
-              src="/choir-group.png" 
+              src="./choir-group.png" 
               alt="Nurturing Nations" 
               fill
               className="object-cover"
