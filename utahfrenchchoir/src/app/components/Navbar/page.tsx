@@ -20,10 +20,7 @@ export default function Navbar() {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
-    <>
-      {/* Spacer div to prevent content from going under fixed navbar */}
-      <div className="h-24" /> {/* Adjust height to match navbar height */}
-      
+    <div>
       <nav
         className={`fixed top-0 left-0 right-0 z-50 ${
           darkMode 
@@ -101,53 +98,56 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
-        <div 
-          className={`md:hidden absolute w-full shadow-lg transition-all duration-300 ease-in-out ${
-            isMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"
-          }`}
-          style={{
-            backgroundColor: darkMode ? '#1a1a1a' : '#e6e6e6'
-          }}
-        >
-          <div className="py-2 px-4 space-y-2">
-            <Link href="/">
-              <div className={`block px-4 mt-1 mb-1 py-2 rounded-md transition-colors duration-300 ${
-                pathname === "/" ? "bg-green-600" : " hover:bg-green-500"
-              }`}>
-                Home
-              </div>
-            </Link>
-            <Link href="/components/About">
-              <div className={`block px-4 py-2 mt-1 mb-1 rounded-md transition-colors duration-300 ${
-                pathname === "/components/About" ? "bg-green-600" : " hover:bg-green-500"
-              }`}>
-                About
-              </div>
-            </Link>
-            <Link href="/components/News">
-              <div className={`block px-4 py-2  mt-1 mb-1 rounded-md transition-colors duration-300 ${
-                pathname === "/components/News" ? "bg-green-600 text-white" : " hover:bg-green-500"
-              }`}>
-                News
-              </div>
-            </Link>
-            <Link href="/components/Book-us">
-              <div className={`block px-4 py-2 mt-1 mb-1 rounded-md transition-colors duration-300 ${
-                pathname === "/components/Book-us" ? "bg-green-600 text-white" : " hover:bg-green-500"
-              }`}>
-                Book Us
-              </div>
-            </Link>
-            <Link href="/components/Donate">
-              <div className="flex items-center px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition-colors duration-300">
-                <DollarSign size={18} className="mr-1" />
-                Donate
-              </div>
-            </Link>
+        {/* Mobile Navigation - No longer absolute */}
+        {isMenuOpen && (
+          <div 
+            className="md:hidden shadow-lg transition-all duration-300 ease-in-out"
+            style={{
+              backgroundColor: darkMode ? '#111827' : '#e6e6e6'
+            }}
+          >
+            <div className="py-2 px-4 space-y-2">
+              <Link href="/">
+                <div className={`block px-4 mt-1 mb-1 py-2 rounded-md transition-colors duration-300 ${
+                  pathname === "/" ? "bg-green-600" : " hover:bg-green-500"
+                }`}>
+                  Home
+                </div>
+              </Link>
+              <Link href="/components/About">
+                <div className={`block px-4 py-2 mt-1 mb-1 rounded-md transition-colors duration-300 ${
+                  pathname === "/components/About" ? "bg-green-600" : " hover:bg-green-500"
+                }`}>
+                  About
+                </div>
+              </Link>
+              <Link href="/components/News">
+                <div className={`block px-4 py-2  mt-1 mb-1 rounded-md transition-colors duration-300 ${
+                  pathname === "/components/News" ? "bg-green-600 text-white" : " hover:bg-green-500"
+                }`}>
+                  News
+                </div>
+              </Link>
+              <Link href="/components/Book-us">
+                <div className={`block px-4 py-2 mt-1 mb-1 rounded-md transition-colors duration-300 ${
+                  pathname === "/components/Book-us" ? "bg-green-600 text-white" : " hover:bg-green-500"
+                }`}>
+                  Book Us
+                </div>
+              </Link>
+              <Link href="/components/Donate">
+                <div className="flex items-center px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition-colors duration-300">
+                  <DollarSign size={18} className="mr-1" />
+                  Donate
+                </div>
+              </Link>
+            </div>
           </div>
-        </div>
+        )}
       </nav>
-    </>
+      
+      {/* Spacer div to prevent content from going under fixed navbar */}
+      <div className={`h-24 ${isMenuOpen ? 'md:h-24 h-64' : 'h-24'}`} />
+    </div>
   );
 }

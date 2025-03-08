@@ -1,18 +1,15 @@
-import type { NextConfig } from "next";
+/** @type {import('next').NextConfig} */
+const isGitHubPages = process.env.GITHUB_PAGES === 'true';
+const repoName = '/UtahFrenchChoir';
 
-// const nextConfig: NextConfig = {
-//   /* config options here */
-// };
-
-// export default nextConfig;
-
-// pablishing Github Pages
-
-const nextConfig: NextConfig = {
-  output: "export",
-  images: { 
-    unoptimized: true 
+const nextConfig = {
+  output: 'export',
+  basePath: isGitHubPages ? repoName : '',
+  assetPrefix: isGitHubPages ? repoName : '',
+  trailingSlash: true,
+  images: {
+    unoptimized: true,
   }
 };
 
-export default nextConfig;
+module.exports = nextConfig;
