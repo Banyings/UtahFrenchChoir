@@ -4,15 +4,12 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Sun, Moon, DollarSign, Menu, X } from "lucide-react";
-import { useTheme } from "../ThemeContext/page";
+import { DollarSign, Menu, X } from "lucide-react";
 
 export default function Navbar() {
-  const { darkMode, setDarkMode } = useTheme();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
 
-  // Close menu when pathname changes (navigation occurs)
   useEffect(() => {
     setIsMenuOpen(false);
   }, [pathname]);
@@ -21,13 +18,7 @@ export default function Navbar() {
 
   return (
     <div>
-      <nav
-        className={`fixed top-0 left-0 right-0 z-50 ${
-          darkMode 
-            ? "bg-gray-900 text-white border-gray-700" 
-            : "bg-teal-100 text-black border-slate-600"
-        }`}
-      >
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-teal-100 text-black border-b ">
         <div className="flex items-center justify-between px-6 py-3 mx-auto max-w-7xl">
           {/* Logo */}
           <div className="flex items-center space-x-3">
@@ -39,14 +30,14 @@ export default function Navbar() {
             <Link
               href="/"
               className={`px-6 py-2 rounded-full transition-all duration-300 hover:bg-green-500 ${
-                pathname === "/" ? "bg-green-600 " : ""
+                pathname === "/" ? "bg-green-600" : ""
               }`}
             >
               Home
             </Link>
             <Link
               href="/components/About"
-              className={`px-6 py-2 rounded-full transition-all duration-300  hover:bg-green-500 ${
+              className={`px-6 py-2 rounded-full transition-all duration-300 hover:bg-green-500 ${
                 pathname === "/components/About" ? "bg-green-600" : ""
               }`}
             >
@@ -54,7 +45,7 @@ export default function Navbar() {
             </Link>
             <Link
               href="/components/News"
-              className={`px-6 py-2 rounded-full transition-all duration-300  hover:bg-green-500 ${
+              className={`px-6 py-2 rounded-full transition-all duration-300 hover:bg-green-500 ${
                 pathname === "/components/News" ? "bg-green-600" : ""
               }`}
             >
@@ -62,8 +53,8 @@ export default function Navbar() {
             </Link>
             <Link
               href="/components/Book-us"
-              className={`px-6 py-2 rounded-full transition-all duration-300  hover:bg-green-500${
-                pathname === "/components/Book-us" ? "bg-green-600e" : ""
+              className={`px-6 py-2 rounded-full transition-all duration-300 hover:bg-green-500 ${
+                pathname === "/components/Book-us" ? "bg-green-600" : ""
               }`}
             >
               Book Us
@@ -79,17 +70,9 @@ export default function Navbar() {
               </button>
             </Link>
 
-            <button 
-              onClick={() => setDarkMode(!darkMode)}
-              className="hover:opacity-80 transition-opacity duration-300"
-              aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
-            >
-              {darkMode ? <Sun size={24} /> : <Moon size={24} />}
-            </button>
-
             {/* Mobile Menu Button */}
-            <button 
-              className="md:hidden hover:opacity-80 transition-opacity duration-300" 
+            <button
+              className="md:hidden hover:opacity-80 transition-opacity duration-300"
               onClick={toggleMenu}
               aria-label="Toggle menu"
             >
@@ -98,40 +81,43 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Mobile Navigation - No longer absolute */}
+        {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div 
-            className="md:hidden shadow-lg transition-all duration-300 ease-in-out"
-            style={{
-              backgroundColor: darkMode ? '#111827' : '#e6e6e6'
-            }}
-          >
+          <div className="md:hidden shadow-lg transition-all duration-300 ease-in-out bg-gray-200">
             <div className="py-2 px-4 space-y-2">
               <Link href="/">
-                <div className={`block px-4 mt-1 mb-1 py-2 rounded-md transition-colors duration-300 ${
-                  pathname === "/" ? "bg-green-600" : " hover:bg-green-500"
-                }`}>
+                <div
+                  className={`block px-4 mt-1 mb-1 py-2 rounded-md transition-colors duration-300 ${
+                    pathname === "/" ? "bg-green-600 text-white" : "hover:bg-green-500"
+                  }`}
+                >
                   Home
                 </div>
               </Link>
               <Link href="/components/About">
-                <div className={`block px-4 py-2 mt-1 mb-1 rounded-md transition-colors duration-300 ${
-                  pathname === "/components/About" ? "bg-green-600" : " hover:bg-green-500"
-                }`}>
+                <div
+                  className={`block px-4 py-2 mt-1 mb-1 rounded-md transition-colors duration-300 ${
+                    pathname === "/components/About" ? "bg-green-600 text-white" : "hover:bg-green-500"
+                  }`}
+                >
                   About
                 </div>
               </Link>
               <Link href="/components/News">
-                <div className={`block px-4 py-2  mt-1 mb-1 rounded-md transition-colors duration-300 ${
-                  pathname === "/components/News" ? "bg-green-600 text-white" : " hover:bg-green-500"
-                }`}>
+                <div
+                  className={`block px-4 py-2 mt-1 mb-1 rounded-md transition-colors duration-300 ${
+                    pathname === "/components/News" ? "bg-green-600 text-white" : "hover:bg-green-500"
+                  }`}
+                >
                   News
                 </div>
               </Link>
               <Link href="/components/Book-us">
-                <div className={`block px-4 py-2 mt-1 mb-1 rounded-md transition-colors duration-300 ${
-                  pathname === "/components/Book-us" ? "bg-green-600 text-white" : " hover:bg-green-500"
-                }`}>
+                <div
+                  className={`block px-4 py-2 mt-1 mb-1 rounded-md transition-colors duration-300 ${
+                    pathname === "/components/Book-us" ? "bg-green-600 text-white" : "hover:bg-green-500"
+                  }`}
+                >
                   Book Us
                 </div>
               </Link>
@@ -145,9 +131,9 @@ export default function Navbar() {
           </div>
         )}
       </nav>
-      
-      {/* Spacer div to prevent content from going under fixed navbar */}
-      <div className={`h-24 ${isMenuOpen ? 'md:h-24 h-64' : 'h-24'}`} />
+
+      {/* Spacer to offset fixed navbar height */}
+      <div className={`h-24 ${isMenuOpen ? "md:h-24 h-64" : "h-24"}`} />
     </div>
   );
 }

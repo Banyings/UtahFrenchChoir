@@ -1,11 +1,9 @@
-"use client";
+'use client';
 import React, { useState } from "react";
 import Image from "next/image";
 import { FaCopyright } from "react-icons/fa";
-import { useTheme } from "../ThemeContext/page";
 
 const Footer = () => {
-  const { darkMode } = useTheme();
   const [quickLinksOpen, setQuickLinksOpen] = useState(false);
 
   const socialLinks = [
@@ -23,9 +21,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className={`${
-      darkMode ? "bg-gray-900 text-white" : "bg-teal-100 text-black"
-    } w-full py-8 px-4 mt-10`}>
+    <footer className="bg-teal-100 text-black w-full py-8 px-4 mt-10 border-slate-600">
       <div className="max-w-6xl mx-auto">
         {/* Desktop Social Media Section */}
         <div className="hidden md:block mb-8">
@@ -83,34 +79,21 @@ const Footer = () => {
         <div className="flex flex-col items-center mb-8">
           <button
             onClick={() => setQuickLinksOpen(!quickLinksOpen)}
-            className={`${
-              darkMode 
-                ? "bg-green-800 hover:bg-green-700" 
-                : "bg-green-500 hover:bg-green-600"
-            }  px-4 py-2 rounded-md transition-colors duration-200`}
+            className="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-md transition-colors duration-200"
           >
             Quick Links {quickLinksOpen ? "▲" : "▼"}
           </button>
-          
+
           <div className={`
             mt-2 w-48 transition-all duration-200 overflow-hidden
             ${quickLinksOpen ? "max-h-48 opacity-100" : "max-h-0 opacity-0"}
           `}>
-            <ul className={`
-              ${darkMode ? "bg-gray-800" : "bg-white"}
-              rounded-md shadow-lg overflow-hidden
-            `}>
+            <ul className="bg-white rounded-md shadow-lg overflow-hidden">
               {quickLinks.map((link) => (
                 <li key={link.name}>
                   <a
                     href={link.href}
-                    className={`
-                      block px-4 py-2
-                      ${darkMode 
-                        ? "hover:bg-green-500 text-white" 
-                        : "hover:bg-green-600 text-black"}
-                      transition-colors
-                    `}
+                    className="block px-4 py-2 hover:bg-green-600 text-black transition-colors"
                   >
                     {link.name}
                   </a>
