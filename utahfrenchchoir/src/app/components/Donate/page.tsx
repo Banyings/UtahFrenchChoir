@@ -1,162 +1,128 @@
-
+// Donation Page
 'use client';
-import React, { useState } from 'react';
+
+import { useState } from 'react';
 import Image from 'next/image';
+import donationImg from '/public/choir-group.png';
 
-const DonationForm = () => {
-  const [selectedAmount, setSelectedAmount] = useState<string>('');
-  const [donationType, setDonationType] = useState<'one-time' | 'monthly'>('one-time');
-  const [customAmount, setCustomAmount] = useState<string>('');
-  const [showPaymentOptions, setShowPaymentOptions] = useState(false);
-  const [selectedPayment, setSelectedPayment] = useState<string>('');
-
-  const predefinedAmounts = [
-    { value: '5', label: '$5' },
-    { value: '10', label: '$10' },
-    { value: '20', label: '$20' },
-    { value: '30', label: '$30' },
-    { value: '50', label: '$50' },
-  ];
-
-  const handleDonate = () => {
-    const amount = selectedAmount || customAmount;
-    if (!amount || parseFloat(amount) <= 0) {
-      alert('Please select or enter a valid donation amount.');
-      return;
-    }
-
-    setShowPaymentOptions(true);
-  };
-
-  const handlePaymentSelection = (method: string) => {
-    setSelectedPayment(method);
-    console.log('Donation amount:', selectedAmount || customAmount);
-    console.log('Donation type:', donationType);
-    console.log('Payment method:', method);
-    alert(`Thank you for your donation via ${method}!`);
-    // Reset state
-    setSelectedAmount('');
-    setCustomAmount('');
-    setShowPaymentOptions(false);
-    setSelectedPayment('');
-  };
+export default function DonatePage() {
+  const [paymentMethod, setPaymentMethod] = useState('');
+  const [donationType, setDonationType] = useState('one-time');
 
   return (
-    <div className="min-h-screen p-4">
-      <div className="max-w-6xl mx-auto">
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          {/* Main Content Section */}
-          <div className="flex flex-col md:flex-row">
-            <div className="w-full md:w-2/3 h-64 md:h-[500px] relative">
-              <Image
-                src="/choir-group.png"
-                alt="Group photo"
-                fill
-                className="object-cover"
-                priority
+    <div className="min-h-screen bg-gray-50 p-4 lg:p-8 flex flex-col">
+      {/* Top Section: Image (3/4) + Message (1/4) */}
+      <div className="flex flex-col lg:flex-row w-full mb-8 gap-6">
+        {/* Image Section */}
+        <div className="relative w-full lg:w-3/4 h-64 lg:h-[500px] rounded-lg overflow-hidden">
+          <Image
+            src={donationImg}
+            alt="Choir Group"
+            fill
+            className="object-cover"
+            priority
+          />
+        </div>
+
+        {/* Thank You Message */}
+        <div className="w-full lg:w-1/4 bg-white p-6 rounded-lg shadow-md flex flex-col justify-center space-y-4">
+          <p className="text-gray-700 text-lg">
+            Your donation means a lot to us! It helps us reach our goals to sing for our Lord Jesus Christ, uplift hearts, and bring peace.
+          </p>
+          <p className="text-gray-700 text-lg">
+            We use your gifts to buy music instruments and enhance our ministry.
+          </p>
+          <p className="font-semibold text-green-600 text-lg">
+            Thank you so much!
+          </p>
+        </div>
+      </div>
+
+      {/* Bottom Section: Payment Form */}
+      <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md space-y-4 w-full">
+        <h2 className="text-xl font-semibold text-center">Make a Donation</h2>
+
+        {/* Payment Method */}
+        <div>
+          <label className="block mb-1 font-medium text-gray-700">Select Payment Method</label>
+          <select
+            className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:ring-green-400"
+            value={paymentMethod}
+            onChange={(e) => setPaymentMethod(e.target.value)}
+          >
+            <option value="">-- Choose --</option>
+            <option value="card">Card</option>
+            <option value="venmo">Venmo</option>
+            <option value="cashapp">Cash App</option>
+          </select>
+        </div>
+
+        {/* Donation Type for Venmo/Cash App */}
+        {(paymentMethod === 'venmo' || paymentMethod === 'cashapp') && (
+          <div>
+            <label className="block mb-1 font-medium text-gray-700">Donation Type</label>
+            <select
+              className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:ring-green-400"
+              value={donationType}
+              onChange={(e) => setDonationType(e.target.value)}
+            >
+              <option value="one-time">One-Time</option>
+              <option value="monthly">Monthly</option>
+            </select>
+          </div>
+        )}
+
+        {/* Card Payment Form */}
+        {paymentMethod === 'card' && (
+          <div className="space-y-3">
+            <input
+              type="text"
+              placeholder="Full Name"
+              className="w-full border border-gray-300 rounded-md p-2"
+            />
+            <input
+              type="text"
+              placeholder="Card Number"
+              className="w-full border border-gray-300 rounded-md p-2"
+            />
+            <div className="flex gap-4">
+              <input
+                type="text"
+                placeholder="MM/YY"
+                className="w-1/2 border border-gray-300 rounded-md p-2"
+              />
+              <input
+                type="text"
+                placeholder="CVC"
+                className="w-1/2 border border-gray-300 rounded-md p-2"
               />
             </div>
-
-            <div className="w-full md:w-1/3 p-6">
-              <div className="space-y-4">
-                <h1 className='text-2xl sm:text-3xl md:text-4xl sm:ml-8 md:ml-16'>Donate</h1>
-                <p className="text-gray-800 leading-relaxed">
-                  Your donation means a lot to us! It helps us sing for our Lord Jesus Christ and uplift hearts.
-                </p>
-                <p className="text-gray-800 leading-relaxed">
-                  With your help, we can buy musical instruments to make our music even more joyful and impactful.
-                </p>
-                <p className="text-gray-800 font-medium">Thank you so much!</p>
-              </div>
-            </div>
+            <button className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-md">
+              Donate with Card
+            </button>
           </div>
+        )}
 
-          {/* Donation Form Section */}
-          <div className="p-6 bg-gray-50">
-            <div className="max-w-3xl mx-auto space-y-4">
-              <p className="font-medium text-center text-teal-800">Select the amount:</p>
-
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {predefinedAmounts.map((amount) => (
-                  <button
-                    key={amount.value}
-                    onClick={() => {
-                      setSelectedAmount(amount.value);
-                      setCustomAmount('');
-                    }}
-                    className={`py-3 px-4 border rounded-md text-center transition-colors
-                      ${selectedAmount === amount.value
-                        ? 'border-green-600 bg-green-50 text-green-700'
-                        : 'border-gray-300 hover:border-green-600'}`}
-                  >
-                    {amount.label}
-                  </button>
-                ))}
-                <input
-                  type="number"
-                  placeholder="Other Amount"
-                  value={customAmount}
-                  onChange={(e) => {
-                    setCustomAmount(e.target.value);
-                    setSelectedAmount('');
-                  }}
-                  className="w-full py-3 px-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                />
-              </div>
-
-              {/* Donation Type */}
-              <div className="flex items-center justify-center space-x-6 mt-6">
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    checked={donationType === 'one-time'}
-                    onChange={() => setDonationType('one-time')}
-                    className="form-radio h-4 w-4 text-green-600"
-                  />
-                  <span className="ml-2 text-gray-700">One-time Donation</span>
-                </label>
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    checked={donationType === 'monthly'}
-                    onChange={() => setDonationType('monthly')}
-                    className="form-radio h-4 w-4 text-green-600"
-                  />
-                  <span className="ml-2 text-gray-700">Monthly Donation</span>
-                </label>
-              </div>
-
-              {/* Donate Button */}
-              <button
-                onClick={handleDonate}
-                className="w-full max-w-md mx-auto block bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-700 transition-colors mt-6"
-              >
-                Donate
-              </button>
-
-              {/* Payment Method Modal */}
-              {showPaymentOptions && (
-                <div className="mt-6 p-4 bg-white border rounded-md shadow">
-                  <p className="text-center font-semibold mb-4">Select a Payment Method:</p>
-                  <div className="grid grid-cols-2 gap-4 text-center">
-                    {['Venmo', 'Zelle', 'PayPal', 'Credit/Debit Card'].map((method) => (
-                      <button
-                        key={method}
-                        onClick={() => handlePaymentSelection(method)}
-                        className="py-2 px-4 border rounded hover:bg-green-100 transition-colors"
-                      >
-                        {method}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
+        {/* External Donation Buttons */}
+        {paymentMethod === 'venmo' && (
+          <a
+            href="https://venmo.com/code?user_id=4210396596536513543&created=1747079270"
+            target="_blank"
+            className="block w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold text-center py-2 rounded-md"
+          >
+            Donate with Venmo
+          </a>
+        )}
+        {paymentMethod === 'cashapp' && (
+          <a
+            href="https://cash.app/$UtahFrenchChoir"
+            target="_blank"
+            className="block w-full bg-green-500 hover:bg-green-600 text-white font-semibold text-center py-2 rounded-md"
+          >
+            Donate with Cash App
+          </a>
+        )}
       </div>
     </div>
   );
-};
-
-export default DonationForm;
+}

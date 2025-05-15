@@ -3,46 +3,67 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@supabase/supabase-js';
-
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const Home = () => {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState<'success' | 'error' | ''>('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubscribe = async () => {
+    // Reset message state
+    setMessage('');
+    setMessageType('');
+
+    // Define allowed email domains
+  const allowedDomains = ['@gmail.com', '@yahoo.fr'];
+
+  // Check if the email ends with one of the allowed domains
+  const isAllowedDomain = allowedDomains.some((domain) =>
+    email.toLowerCase().endsWith(domain)
+  );
+
+  if (!isAllowedDomain) {
+    setMessage('Incorrect email address. Please enter something like example@gmail.com');
+    setMessageType('error');
+    return;
+  }
+    
+    // Basic email validation
     if (!email || !email.includes('@')) {
-      setMessage('Please enter a valid email.');
+      setMessage('Please enter a valid email address');
       setMessageType('error');
       return;
     }
-  
+
+    setIsLoading(true);
+    
     try {
-      const { data, error } = await supabase
-        .from('subscribers')
-        .insert([{ email }]);
-  
-      if (error) {
-        if (error.message.toLowerCase().includes('duplicate')) {
-          setMessage('You are already subscribed with this email.');
-        } else {
-          setMessage(error.message || 'Subscription failed.');
-        }
+      // Call our server API endpoint
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+      
+      if (!response.ok) {
+        setMessage(data.error || 'Subscription failed. Please try again.');
         setMessageType('error');
       } else {
-        setMessage('Subscribed successfully!');
+        setMessage('Subscribed successfully! Check your email for confirmation.');
         setMessageType('success');
-        setEmail('');
+        setEmail(''); // Clear the input on success
       }
     } catch (err) {
-      setMessage('Error connecting to database. Please try again later.');
+      setMessage('Error connecting to server. Please try again later.');
       setMessageType('error');
+    } finally {
+      setIsLoading(false);
     }
   };
   
@@ -53,30 +74,33 @@ const Home = () => {
   
   // Frontend Tsx/Javascript and Tailwindcss
   return (
-    <div className="max-w-auto mx-auto px-4 py-8">
+    <div className="w-full px-4 py-8">
       {/* Hero Section */}
-      <div className="grid md:grid-cols-2 gap-8 items-center mb-8">
-        <div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">Welcome to Utah French Choir</h1>
-          <div className="space-y-4">
-            <p className="text-lg font-medium mb-4">
-              We combine cultures to enhance our voices together and our testimonies of the Lord. We sing for God and for others to join and become better.
-            </p>
-            <button
-              className="bg-green-600 text-white px-8 py-3 rounded-md hover:bg-green-700 transition-colors"
-              onClick={navigateToJoinUs}
-            >
-              Join-Us
-            </button>
-          </div>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-8 items-center mb-8">
+        {/* Message: 1/4 on desktop */}
+        <div className="md:col-span-1 space-y-4">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6">
+            Welcome to Utah French Choir
+          </h1>
+          <p className="text-lg font-medium mb-4">
+            We combine cultures to enhance our voices together and our testimonies of the Lord. We sing for God and for others to join and become better.
+          </p>
+          <button
+            className="bg-green-600 text-white px-8 py-3 rounded-md hover:bg-green-700 transition-colors"
+            onClick={navigateToJoinUs}
+          >
+            Join-Us
+          </button>
         </div>
-        <div className="relative w-full aspect-[4/2] rounded-lg overflow-hidden">
+
+        {/* Image: 3/4 on desktop */}
+        <div className="md:col-span-3 relative w-full aspect-[4/2] rounded-lg overflow-hidden">
           <Image
             src="/choir-group.png"
             alt="Choir group"
             fill
             className="object-cover"
-            sizes="(max-width: 768px) 100vw, 50vw"
+            sizes="(max-width: 768px) 100vw, 75vw"
             priority
           />
         </div>
@@ -120,14 +144,17 @@ const Home = () => {
             aria-label="Email address"
           />
           <button
-            className="bg-green-600 text-white px-8 py-2 rounded-md hover:bg-green-700 transition-colors whitespace-nowrap"
+            className={`bg-green-600 text-white px-8 py-2 rounded-md hover:bg-green-700 transition-colors whitespace-nowrap ${
+              isLoading ? 'opacity-70 cursor-not-allowed' : ''
+            }`}
             onClick={handleSubscribe}
+            disabled={isLoading}
           >
-            Subscribe Now
+            {isLoading ? 'Processing...' : 'Subscribe Now'}
           </button>
         </div>
         {message && (
-          <p className={`mt-4 p-2 rounded-md ${messageType === 'success' ? 'bg-green-100 text-green-800 border' : 'bg-red-100 text-red-800 border border-red-400'}`}>
+          <p className={`mt-4 p-2 rounded-md ${messageType === 'success' ? 'bg-green-100 text-green-800 border border-green-400' : 'bg-red-100 text-red-800 border border-red-400'}`}>
             {message}
           </p>
         )}
