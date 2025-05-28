@@ -1,23 +1,60 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// /* eslint-disable @typescript-eslint/no-unused-vars */
-// /* eslint-disable @typescript-eslint/no-explicit-any */
-// app/api/subscribe/route.ts
+// app/api/stayTuned/subscribe/route.ts
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import sgMail from '@sendgrid/mail';
 
-// Initialize Supabase client (server-side)
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';// supabase key goes here
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY || ''; // server-side service key goes here
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+// Get environment variables
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const sendgridApiKey = process.env.SENDGRID_API_KEY;
+const sendgridFromEmail = process.env.SENDGRID_FROM_EMAIL;
 
-// Initialize SendGrid
-const sendgridApiKey = process.env.SENDGRID_API_KEY || ''; //sendgrid key goes here
-sgMail.setApiKey(sendgridApiKey);
+// Only initialize if we have the required environment variables
+let supabase: any = null;
+let sgMailInitialized = false;
+
+if (supabaseUrl && supabaseServiceKey) {
+  supabase = createClient(supabaseUrl, supabaseServiceKey);
+}
+
+if (sendgridApiKey) {
+  sgMail.setApiKey(sendgridApiKey);
+  sgMailInitialized = true;
+}
 
 export async function POST(request: Request) {
   try {
+    // Runtime environment variable validation
+    if (!supabaseUrl) {
+      return NextResponse.json(
+        { error: 'Server configuration error: Missing Supabase URL' },
+        { status: 500 }
+      );
+    }
+
+    if (!supabaseServiceKey) {
+      return NextResponse.json(
+        { error: 'Server configuration error: Missing Supabase key' },
+        { status: 500 }
+      );
+    }
+
+    if (!sendgridApiKey) {
+      return NextResponse.json(
+        { error: 'Server configuration error: Missing SendGrid API key' },
+        { status: 500 }
+      );
+    }
+
+    if (!sendgridFromEmail) {
+      return NextResponse.json(
+        { error: 'Server configuration error: Missing from email' },
+        { status: 500 }
+      );
+    }
+
     const { email } = await request.json();
 
     // Validate email format
@@ -63,7 +100,7 @@ export async function POST(request: Request) {
     // Send confirmation email
     const msg = {
       to: email,
-      from: '',// the verified sendgrid email goes here
+      from: sendgridFromEmail,
       subject: 'Thanks for Subscribing to Utah French Choir!',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">

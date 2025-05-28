@@ -1,0 +1,23 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "target": "ES2017",
+      "noEmit": false,
+      "isolatedModules": false,
+      "jsx": "react",
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true
+    },
+    "include": [
+      "scripts/**/*",
+      "src/**/*"
+    ],
+    "exclude": [
+      "node_modules",
+      ".next",
+      "**/*.test.ts",
+      "**/*.spec.ts"
+    ]
+  }
